@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keep It Together</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-shell main-menu-active">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">KT</span><div><h1>Keep It Together</h1><p>Campus life balance challenge</p></div></div>
+      <div class="stats" aria-live="polite">
+        <div><span class="stat-label">SCORE</span><strong id="score">0</strong></div>
+        <div><span class="stat-label">LIVES</span><strong id="lives">♥ ♥ ♥ ♥ ♥</strong></div>
+        <div><span class="stat-label">TIME</span><strong id="time">60</strong></div>
+        <button id="restart-button" class="restart-button" type="button" hidden>Restart</button>
+      </div>
+    </header>
+
+    <section class="play-area" aria-label="Game area">
+      <canvas id="game-canvas" width="800" height="500" aria-label="Catch good campus habits and avoid bad habits"></canvas>
+      <div class="screen menu-screen" id="main-menu">
+        <section class="menu-panel menu-card" id="main-menu-panel" aria-labelledby="menu-title">
+          <div class="eyebrow">YOUR CAMPUS LIFE CHALLENGE</div>
+          <h2 id="menu-title">KEEP IT<br>TOGETHER</h2>
+          <p class="menu-tagline">University life is a lot. Keep it together.</p>
+          <nav class="menu-buttons" aria-label="Main menu">
+            <button type="button" id="play-menu-button">Play</button>
+          </nav>
+          <p class="main-menu-best-score" id="main-menu-best-score" aria-live="polite">🏆 BEST SCORE: 0</p>
+          <div class="main-menu-audio-controls" role="group" aria-label="Audio settings">
+            <button type="button" class="audio-toggle" id="music-toggle" role="switch" aria-checked="true" aria-label="Music">
+              <svg class="audio-toggle-icon music-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 18V5l11-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="17" cy="16" r="3"></circle>
+                <path class="toggle-slash" d="M4 4 20 20"></path>
+              </svg>
+              <span>Music</span>
+            </button>
+            <button type="button" class="audio-toggle" id="sound-effects-toggle" role="switch" aria-checked="true" aria-label="Sound Effects">
+              <svg class="audio-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 9v6h4l5 4V5L8 9H4Z"></path>
+                <path d="M16 9a5 5 0 0 1 0 6M18.5 6.5a9 9 0 0 1 0 11"></path>
+                <path class="toggle-slash" d="M4 4 20 20"></path>
+              </svg>
+              <span>Sound</span>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <div class="screen" id="screen" hidden>
+        <div class="screen-card" id="instruction-card">
+          <div class="eyebrow">A LITTLE CAMPUS BALANCE</div>
+          <h2 id="screen-title">Keep your week together.</h2>
+          <p id="screen-copy">Catch healthy habits to build your score. Steer clear of the distractions and make it through the week!</p>
+          <div class="legend">
+            <span>📚 Book<br>🏃 Exercise<br>💰 Save Money <b>Good habits</b></span>
+            <span>🍔 Fast Food<br>🎮 Gaming<br>🛍️ Shopping <b>Avoid</b></span>
+          </div>
+          <p class="controls">Move with <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd></p>
+          <p class="win-target-tip">Get 20 points or more to win the game!</p>
+          <p class="time-bonus-tip">Catch ⏱️ Time Bonus to add 3 seconds (up to 60).</p>
+          <button id="start-button">Start game</button>
+        </div>
+        <section class="screen-card result-card" id="result-card" aria-labelledby="result-title" hidden>
+          <div class="eyebrow" id="result-eyebrow">YOUR CAMPUS JOURNEY</div>
+          <h2 id="result-title"></h2>
+          <p id="result-copy"></p>
+          <p class="new-best-score-message" id="new-best-score-message" aria-live="polite" hidden>NEW BEST SCORE!</p>
+          <div class="result-stats" aria-label="Round results">
+            <div id="result-score-row"><span id="result-score-label">⭐ Final Score</span><strong id="result-score">0</strong></div>
+            <div><span>🏆 Best Score</span><strong id="result-best-score">0</strong></div>
+            <div><span>🕒 Time Left</span><strong id="result-time">0 seconds</strong></div>
+            <div><span>♥ Lives Remaining</span><strong id="result-lives">0</strong></div>
+          </div>
+          <div class="result-actions">
+            <button id="result-play-again" type="button">Play Again</button>
+            <button id="result-main-menu" class="secondary-menu-button" type="button">Main Menu</button>
+          </div>
+        </section>
+      </div>
+      <button id="pause-button" class="pause-button" type="button" aria-label="Pause game" hidden>⏸️</button>
+      <div class="pause-overlay" id="pause-overlay" hidden>
+        <section class="pause-card" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+          <div id="pause-menu-panel">
+            <div class="eyebrow">TAKE A BREATHE</div>
+            <h2 id="pause-title">PAUSED</h2>
+            <div class="pause-actions">
+              <button id="resume-button" type="button">RESUME</button>
+              <button id="pause-main-menu-button" class="secondary-menu-button" type="button">MAIN MENU</button>
+            </div>
+          </div>
+          <div id="pause-confirmation-panel" hidden>
+            <div class="eyebrow">LEAVE THIS ROUND?</div>
+            <h2>Return to Main Menu?</h2>
+            <p>Your current round will be lost.</p>
+            <div class="pause-actions">
+              <button id="confirm-main-menu-button" type="button">YES, MAIN MENU</button>
+              <button id="cancel-main-menu-button" class="secondary-menu-button" type="button">CANCEL</button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="toast" id="toast" aria-live="polite"></div>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
