@@ -486,6 +486,7 @@ function endGame(won) {
   running = false;
   paused = false;
   gameShell.classList.remove('is-playing');
+  gameShell.classList.remove('is-paused');
   pauseButton.hidden = true;
   touchControls.hidden = true;
   pauseOverlay.hidden = true;
@@ -648,6 +649,7 @@ function startGameTimer() {
 function pauseGame() {
   if (!running || paused) return;
   paused = true;
+  gameShell.classList.add('is-paused');
   keys.clear();
   touchDirections.clear();
   activeTouchPointers.clear();
@@ -668,6 +670,7 @@ function pauseGame() {
 function resumeGame() {
   if (!running || !paused) return;
   paused = false;
+  gameShell.classList.remove('is-paused');
   touchControls.hidden = false;
   pauseOverlay.hidden = true;
   pauseMenuPanel.hidden = false;
@@ -697,6 +700,7 @@ function returnToMainMenu() {
   running = false;
   paused = false;
   gameShell.classList.remove('is-playing');
+  gameShell.classList.remove('is-paused');
   stopBackgroundMusic();
   clearInterval(gameTimer);
   gameTimer = null;
@@ -726,6 +730,7 @@ function returnToMainMenu() {
 function startGame(restartMusic = false) {
   paused = false;
   gameShell.classList.add('is-playing');
+  gameShell.classList.remove('is-paused');
   touchControls.hidden = false;
   pauseOverlay.hidden = true;
   pauseButton.hidden = false;
