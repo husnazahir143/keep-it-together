@@ -86,6 +86,8 @@ const mainMenu = document.getElementById('main-menu');
 const mainMenuPanel = document.getElementById('main-menu-panel');
 const musicToggleButton = document.getElementById('music-toggle');
 const soundEffectsToggleButton = document.getElementById('sound-effects-toggle');
+const touchControls = document.getElementById('touch-controls');
+const touchControlButtons = [...document.querySelectorAll('.touch-control[data-direction]')];
 const pauseButton = document.getElementById('pause-button');
 const pauseOverlay = document.getElementById('pause-overlay');
 const pauseMenuPanel = document.getElementById('pause-menu-panel');
@@ -274,6 +276,8 @@ function playSound(source, trackCatch = false) {
   }
 }
 const keys = new Set();
+const touchDirections = new Set();
+const activeTouchPointers = new Map();
 const player = { x: 400, y: 436, width: 52, speed: 330 };
 let items = [];
 let score = 0;
@@ -393,7 +397,7 @@ function drawCampus() {
 }
 
 function drawPlayer() {
-  const moving = keys.has('ArrowLeft') || keys.has('ArrowRight') || keys.has('a') || keys.has('d');
+  const moving = keys.has('ArrowLeft') || keys.has('ArrowRight') || keys.has('a') || keys.has('d') || touchDirections.size > 0;
   const runFrame = Math.floor(animationTime * 8) % runningStudentSprites.length;
   const sprite = moving ? runningStudentSprites[runFrame] : idleStudentSprite;
   const bob = moving ? 0 : Math.sin(animationTime * 2.5) * 1.2;
@@ -481,7 +485,9 @@ function endGame(won) {
   updateBestScoreDisplay(bestScore);
   running = false;
   paused = false;
+  gameShell.classList.remove('is-playing');
   pauseButton.hidden = true;
+  touchControls.hidden = true;
   pauseOverlay.hidden = true;
   currentAudioScreen = 'result';
   stopBackgroundMusic();
@@ -550,11 +556,11 @@ function update(delta) {
   roundElapsed = Math.min(60, roundElapsed + delta);
   // Difficulty rises smoothly through the 0–20s Easy, 21–40s Medium, and 41–60s Challenging ranges.
   const difficultyProgress = roundElapsed / 60;
-  if (keys.has('ArrowLeft') || keys.has('a')) {
+  if (keys.has('ArrowLeft') || keys.has('a') || touchDirections.has('left')) {
     player.x -= player.speed * delta;
     playerDirection = -1;
   }
-  if (keys.has('ArrowRight') || keys.has('d')) {
+  if (keys.has('ArrowRight') || keys.has('d') || touchDirections.has('right')) {
     player.x += player.speed * delta;
     playerDirection = 1;
   }
@@ -643,6 +649,9 @@ function pauseGame() {
   if (!running || paused) return;
   paused = true;
   keys.clear();
+  touchDirections.clear();
+  activeTouchPointers.clear();
+  touchControls.hidden = true;
   clearInterval(gameTimer);
   gameTimer = null;
   if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
@@ -659,6 +668,7 @@ function pauseGame() {
 function resumeGame() {
   if (!running || !paused) return;
   paused = false;
+  touchControls.hidden = false;
   pauseOverlay.hidden = true;
   pauseMenuPanel.hidden = false;
   pauseConfirmationPanel.hidden = true;
@@ -686,12 +696,16 @@ function cancelMainMenuConfirmation() {
 function returnToMainMenu() {
   running = false;
   paused = false;
+  gameShell.classList.remove('is-playing');
   stopBackgroundMusic();
   clearInterval(gameTimer);
   gameTimer = null;
   if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
   animationFrameId = null;
   keys.clear();
+  touchDirections.clear();
+  activeTouchPointers.clear();
+  touchControls.hidden = true;
   pauseButton.hidden = true;
   pauseOverlay.hidden = true;
   pauseMenuPanel.hidden = false;
@@ -711,6 +725,8 @@ function returnToMainMenu() {
 
 function startGame(restartMusic = false) {
   paused = false;
+  gameShell.classList.add('is-playing');
+  touchControls.hidden = false;
   pauseOverlay.hidden = true;
   pauseButton.hidden = false;
   pauseMenuPanel.hidden = false;
@@ -730,6 +746,8 @@ function startGame(restartMusic = false) {
   livesText.classList.remove('life-hit');
   playArea.classList.remove('shake');
   keys.clear();
+  touchDirections.clear();
+  activeTouchPointers.clear();
 
   score = 0;
   roundElapsed = 0;
@@ -795,6 +813,32 @@ window.addEventListener('keydown', (event) => {
 window.addEventListener('keyup', (event) => {
   const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
   keys.delete(key);
+});
+
+function releaseTouchDirection(pointerId) {
+  const direction = activeTouchPointers.get(pointerId);
+  if (!direction) return;
+  activeTouchPointers.delete(pointerId);
+  if (![...activeTouchPointers.values()].includes(direction)) touchDirections.delete(direction);
+}
+
+for (const button of touchControlButtons) {
+  button.addEventListener('pointerdown', (event) => {
+    if (!running || paused) return;
+    event.preventDefault();
+    const direction = button.dataset.direction;
+    activeTouchPointers.set(event.pointerId, direction);
+    touchDirections.add(direction);
+    try { button.setPointerCapture(event.pointerId); } catch {}
+  });
+  for (const eventName of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+    button.addEventListener(eventName, (event) => releaseTouchDirection(event.pointerId));
+  }
+  button.addEventListener('contextmenu', (event) => event.preventDefault());
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && running && !paused) pauseGame();
 });
 
 draw();

@@ -20,6 +20,10 @@
 
     <section class="play-area" aria-label="Game area">
       <canvas id="game-canvas" width="800" height="500" aria-label="Catch good campus habits and avoid bad habits"></canvas>
+      <div class="touch-controls" id="touch-controls" role="group" aria-label="Move the player" hidden>
+        <button type="button" class="touch-control" data-direction="left" aria-label="Move left">◀</button>
+        <button type="button" class="touch-control" data-direction="right" aria-label="Move right">▶</button>
+      </div>
       <div class="screen menu-screen" id="main-menu">
         <section class="menu-panel menu-card" id="main-menu-panel" aria-labelledby="menu-title">
           <div class="eyebrow">YOUR CAMPUS LIFE CHALLENGE</div>
@@ -60,7 +64,15 @@
             <span>📚 Book<br>🏃 Exercise<br>💰 Save Money <b>Good habits</b></span>
             <span>🍔 Fast Food<br>🎮 Gaming<br>🛍️ Shopping <b>Avoid</b></span>
           </div>
-          <p class="controls">Move with <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd></p>
+          <p class="controls">
+            <span>Move with <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd></span>
+            <span class="touch-control-guide" aria-label="or use touchscreen left and right controls">
+              <span>or</span>
+              <span class="touch-control-guide-icon" aria-hidden="true">◀</span>
+              <span class="touch-control-guide-icon" aria-hidden="true">▶</span>
+            </span>
+          </p>
+          <p class="mobile-controls-tip">Mobile &amp; Tablet: Use the on-screen left and right buttons to move your character.</p>
           <p class="win-target-tip">Get 20 points or more to win the game!</p>
           <p class="time-bonus-tip">Catch ⏱️ Time Bonus to add 3 seconds (up to 60).</p>
           <button id="start-button">Start game</button>
