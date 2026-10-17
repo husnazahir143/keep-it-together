@@ -10,10 +10,15 @@
   <main class="game-shell main-menu-active">
     <header class="topbar">
       <div class="brand"><span class="brand-mark">KT</span><div><h1>Keep It Together</h1><p>Campus life balance challenge</p></div></div>
-      <div class="stats" aria-live="polite">
+        <div class="stats" aria-live="polite">
+        <div class="financial-target-hud" id="financial-target-hud" aria-live="polite" hidden>
+          <div class="financial-target-line"><strong id="financial-target-text">RM0.00 / RM100.00</strong><span id="financial-frenzy-indicator" hidden>FRENZY BONUS! <b id="financial-frenzy-time">5.0s</b></span></div>
+          <div class="financial-progress-track"><span id="financial-target-progress"></span></div>
+        </div>
         <div><span class="stat-label">SCORE</span><strong id="score">0</strong></div>
-        <div><span class="stat-label">LIVES</span><strong id="lives">♥ ♥ ♥ ♥ ♥</strong></div>
-        <div><span class="stat-label">TIME</span><strong id="time">60</strong></div>
+        <div class="financial-money-stat" id="financial-money-stat" hidden><span class="stat-label">TOTAL MONEY</span><strong id="financial-money">RM0.00</strong></div>
+          <div><span class="stat-label">LIVES</span><strong id="lives">♥ ♥ ♥</strong></div>
+        <div class="time-stat"><span class="stat-label">TIME</span><strong id="time">60</strong></div>
         <button id="restart-button" class="restart-button" type="button" hidden>Restart</button>
       </div>
     </header>
@@ -32,7 +37,6 @@
           <nav class="menu-buttons" aria-label="Main menu">
             <button type="button" id="play-menu-button">Play</button>
           </nav>
-          <p class="main-menu-best-score" id="main-menu-best-score" aria-live="polite">🏆 BEST SCORE: 0</p>
           <div class="main-menu-audio-controls" role="group" aria-label="Audio settings">
             <button type="button" class="audio-toggle" id="music-toggle" role="switch" aria-checked="true" aria-label="Music">
               <svg class="audio-toggle-icon music-toggle-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -56,26 +60,149 @@
       </div>
 
       <div class="screen" id="screen" hidden>
+        <section class="screen-card mode-selection-card" id="mode-selection-card" aria-labelledby="mode-selection-title" hidden>
+          <div class="eyebrow">CHOOSE YOUR CHALLENGE</div>
+          <h2 id="mode-selection-title">Choose Your Mode</h2>
+          <p class="mode-selection-intro">Pick a mode to see what awaits you.</p>
+          <div class="mode-card-list" role="group" aria-label="Game modes">
+            <button type="button" class="mode-card" data-mode="classic" aria-pressed="true">
+              <span class="mode-card-icon" aria-hidden="true">🎓</span>
+              <span class="mode-card-title">Main Mode</span>
+              <span class="mode-card-description">Help Amina survive the challenges of university life! Collect good habits, and avoid bad habits to get through campus life.</span>
+              <span class="mode-card-best-score" aria-live="polite">🏆 BEST SCORE: 0</span>
+            </button>
+            <button type="button" class="mode-card" data-mode="monkey" aria-pressed="false">
+              <span class="mode-card-icon" aria-hidden="true">🐒</span>
+              <span class="mode-card-title">Monkey Attack</span>
+              <span class="mode-card-description">Oh no! Monkeys are attacking the campus! Help Amina collect good items, avoid bad habits and dodge mischievous monkeys.</span>
+              <span class="mode-card-best-score" aria-live="polite">🏆 BEST SCORE: 0</span>
+            </button>
+            <button type="button" class="mode-card" data-mode="financialMaster" aria-pressed="false">
+              <span class="mode-card-icon" aria-hidden="true">💵</span>
+              <span class="mode-card-title">Financial Master</span>
+              <span class="mode-card-description">Amina is the secretary of her university hiking club, and it's time to raise funds for the annual club activity! Collect money, reach fundraising targets, and avoid sneaky thieves along the way.</span>
+              <span class="mode-card-best-score" aria-live="polite">🏆 BEST SCORE: 0</span>
+            </button>
+          </div>
+          <div class="mode-preview" aria-live="polite">
+            <h3 id="mode-preview-title">Main Mode</h3>
+              <p id="mode-preview-copy">Help Amina survive the challenges of university life! Collect good habits, and avoid bad habits to get through campus life.</p>
+          </div>
+          <div class="mode-selection-actions">
+            <button type="button" id="confirm-mode-button">Choose Mode</button>
+            <button type="button" id="modes-back-button" class="secondary-menu-button">Back</button>
+          </div>
+        </section>
         <div class="screen-card" id="instruction-card">
-          <div class="eyebrow">A LITTLE CAMPUS BALANCE</div>
           <h2 id="screen-title">Keep your week together.</h2>
           <p id="screen-copy">Catch healthy habits to build your score. Steer clear of the distractions and make it through the week!</p>
-          <div class="legend">
-            <span>📚 Book<br>🏃 Exercise<br>💰 Save Money <b>Good habits</b></span>
-            <span>🍔 Fast Food<br>🎮 Gaming<br>🛍️ Shopping <b>Avoid</b></span>
+          <p class="mode-instruction-detail" id="mode-instruction-detail" hidden></p>
+          <div class="mode-instructions monkey-instructions" id="monkey-instructions" hidden>
+            <section class="instruction-step">
+              <h3><span>1</span> Catch Good Habits</h3>
+              <div class="instruction-item-list">
+                <div class="instruction-item"><img id="classic-book-instruction-image" alt=""><span>Book</span></div>
+                <div class="instruction-item"><img id="classic-exercise-instruction-image" alt=""><span>Exercise</span></div>
+                <div class="instruction-item"><img id="classic-savings-instruction-image" alt=""><span>Save Money</span></div>
+              </div>
+              <p>Each good item gives <strong>+2 points</strong>.</p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>2</span> Avoid Bad Habits</h3>
+              <div class="instruction-item-list">
+                <div class="instruction-item"><img id="classic-burger-instruction-image" alt=""><span>Fast Food</span></div>
+                <div class="instruction-item"><img id="classic-gaming-instruction-image" alt=""><span>Gaming</span></div>
+                <div class="instruction-item"><img id="classic-shopping-instruction-image" alt=""><span>Shopping</span></div>
+              </div>
+              <p>Each bad item removes <strong>1 life</strong>.</p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>3</span> Dodge the Monkeys</h3>
+              <div class="monkey-instruction-visual" aria-hidden="true"><img id="monkey-instruction-image" alt=""></div>
+              <p>Monkeys fall in lanes and may <strong>switch lanes</strong> once. Watch for the visible shake warning before each switch. A collision costs <strong>1 life</strong>.</p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>4</span> Catch the Rare 2× Bonus</h3>
+              <div class="monkey-instruction-visual bonus-visual" aria-hidden="true"><span>2×</span></div>
+              <p>Catch it to make good items worth <strong>+4 points</strong> for 10 seconds.</p>
+            </section>
+            <section class="instruction-step win-rules-step">
+              <h3><span>5</span> Survive as Long as Possible</h3>
+              <p>Start with <strong>3 lives</strong>. There is no countdown timer or win target. The round ends when all 3 lives are lost.</p>
+              <p>Move with <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd>. Mobile &amp; tablet: hold the on-screen <b>◀</b> or <b>▶</b> button to move.</p>
+            </section>
           </div>
-          <p class="controls">
-            <span>Move with <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd></span>
-            <span class="touch-control-guide" aria-label="or use touchscreen left and right controls">
-              <span>or</span>
-              <span class="touch-control-guide-icon" aria-hidden="true">◀</span>
-              <span class="touch-control-guide-icon" aria-hidden="true">▶</span>
-            </span>
-          </p>
-          <p class="mobile-controls-tip">Mobile &amp; Tablet: Use the on-screen left and right buttons to move your character.</p>
-          <p class="win-target-tip">Get 20 points or more to win the game!</p>
-          <p class="time-bonus-tip">Catch ⏱️ Time Bonus to add 3 seconds (up to 60).</p>
-          <button id="start-button">Start game</button>
+          <div class="mode-instructions financial-master-instructions" id="financial-master-instructions" hidden>
+            <section class="instruction-step financial-money-step">
+              <h3><span>1</span> Collect Money</h3>
+              <div class="instruction-item-list financial-note-list">
+                <div class="instruction-item"><img id="financial-rm1-instruction-image" alt=""><span>RM1 · +1 point</span></div>
+                <div class="instruction-item"><img id="financial-rm5-instruction-image" alt=""><span>RM5 · +5 points</span></div>
+                <div class="instruction-item"><img id="financial-rm10-instruction-image" alt=""><span>RM10 · +10 points</span></div>
+              </div>
+              <p>Each money item adds its value to your score and club funds. Your funds carry over between targets. <strong>Be careful! Windy weather may blow the money into another lane.</strong></p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>2</span> Avoid the Thief</h3>
+              <div class="financial-thief-visual" aria-hidden="true">🥷</div>
+              <p>Watch out for sneaky thieves! If Amina gets hit, she loses <strong>1 life</strong>.</p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>3</span> Reach Fundraising Targets</h3>
+              <p>The first target is <strong>RM100</strong>. Each next target increases by <strong>RM150</strong>.</p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>4</span> Frenzy Bonus</h3>
+              <p>During the <strong>5-second Frenzy</strong>, Amina moves faster and money drops more often. No thieves appear during Frenzy.</p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>5</span> Survive &amp; Move</h3>
+              <p>Start with <strong>3 lives</strong>. The game ends when all 3 lives are lost.</p>
+              <p>Keyboard: use <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd>. Mobile &amp; tablet: hold the on-screen <b>◀</b> or <b>▶</b> button to move.</p>
+            </section>
+          </div>
+          <div class="classic-instructions" id="classic-instructions" hidden>
+            <section class="instruction-step">
+              <h3><span>1</span> Catch Good Habits</h3>
+              <div class="instruction-item-list">
+                <div class="instruction-item"><img id="classic-mode-book-instruction-image" alt=""><span>Book</span></div>
+                <div class="instruction-item"><img id="classic-mode-exercise-instruction-image" alt=""><span>Exercise</span></div>
+                <div class="instruction-item"><img id="classic-mode-savings-instruction-image" alt=""><span>Save Money</span></div>
+              </div>
+              <p>Each gives <strong>+2 points</strong>. While Double Points is active, each gives <strong>+4 points</strong>.</p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>2</span> Avoid Bad Habits</h3>
+              <div class="instruction-item-list">
+                <div class="instruction-item"><img id="classic-mode-burger-instruction-image" alt=""><span>Fast Food</span></div>
+                <div class="instruction-item"><img id="classic-mode-gaming-instruction-image" alt=""><span>Gaming</span></div>
+                <div class="instruction-item"><img id="classic-mode-shopping-instruction-image" alt=""><span>Shopping</span></div>
+              </div>
+              <p>Each bad item removes <strong>−1 life</strong>. Missing an item has no penalty.</p>
+            </section>
+            <section class="instruction-step">
+              <h3><span>3</span> Use Your Controls</h3>
+              <p>Keyboard: use <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd>. Mobile &amp; tablet: hold the on-screen <b>◀</b> or <b>▶</b> button to move.</p>
+            </section>
+            <section class="instruction-step bonuses-step">
+              <h3><span>4</span> Grab Bonuses &amp; Win!</h3>
+              <div class="bonus-guide-list">
+                <div class="bonus-guide">
+                  <img id="time-bonus-instruction-image" alt="Golden stopwatch Time Bonus">
+                  <p><strong>Time Bonus</strong><br>Adds <b>5 seconds</b> (up to 60 seconds).</p>
+                </div>
+                <div class="bonus-guide">
+                  <img id="double-points-instruction-image" alt="Golden 2× Double Points Bonus">
+                  <p><strong>Double Points</strong><br>Good catches score <b>+4 points</b> for 10 seconds.</p>
+                </div>
+              </div>
+              <p>Start with <strong>3 lives</strong> and <strong>60 seconds</strong>. Reach <strong>50 points</strong> and keep at least 1 life until time runs out to win!</p>
+            </section>
+          </div>
+          <div class="instruction-actions">
+            <button type="button" id="instructions-back-button" class="secondary-menu-button">Back</button>
+            <button type="button" id="start-button">Start game</button>
+          </div>
         </div>
         <section class="screen-card result-card" id="result-card" aria-labelledby="result-title" hidden>
           <div class="eyebrow" id="result-eyebrow">YOUR CAMPUS JOURNEY</div>
@@ -85,8 +212,9 @@
           <div class="result-stats" aria-label="Round results">
             <div id="result-score-row"><span id="result-score-label">⭐ Final Score</span><strong id="result-score">0</strong></div>
             <div><span>🏆 Best Score</span><strong id="result-best-score">0</strong></div>
-            <div><span>🕒 Time Left</span><strong id="result-time">0 seconds</strong></div>
-            <div><span>♥ Lives Remaining</span><strong id="result-lives">0</strong></div>
+            <div id="result-time-stat"><span id="result-time-label">🕒 Time Left</span><strong id="result-time">0 seconds</strong></div>
+            <div id="result-financial-money-stat" hidden><span>💵 Total Money</span><strong id="result-financial-money">RM0.00</strong></div>
+            <div id="result-lives-stat"><span>♥ Lives Remaining</span><strong id="result-lives">0</strong></div>
           </div>
           <div class="result-actions">
             <button id="result-play-again" type="button">Play Again</button>
