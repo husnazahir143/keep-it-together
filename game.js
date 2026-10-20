@@ -556,60 +556,88 @@ function drawCampus() {
   }
 
   const sky = ctx.createLinearGradient(0, 0, 0, 500);
-  sky.addColorStop(0, '#b8dfe0');
-  sky.addColorStop(0.62, '#e1eee0');
-  sky.addColorStop(1, '#b8d2a5');
+  sky.addColorStop(0, '#80c4fb');
+  sky.addColorStop(0.53, '#b9dcf4');
+  sky.addColorStop(0.72, '#f5d9b2');
+  sky.addColorStop(1, '#f5d7a5');
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, 800, 500);
 
-  drawCloud(88, 66, 0.85);
-  drawCloud(630, 78, 1.05);
+  drawCloud(90, 72, 0.7);
+  drawCloud(586, 61, 0.85);
 
-  // Rolling hills and lawn
-  ctx.fillStyle = '#a9cda4';
-  ctx.beginPath(); ctx.moveTo(0, 226); ctx.quadraticCurveTo(162, 145, 340, 228); ctx.quadraticCurveTo(584, 135, 800, 218); ctx.lineTo(800, 500); ctx.lineTo(0, 500); ctx.fill();
-  ctx.fillStyle = '#80b18a';
-  ctx.beginPath(); ctx.moveTo(0, 282); ctx.quadraticCurveTo(198, 230, 385, 291); ctx.quadraticCurveTo(600, 240, 800, 278); ctx.lineTo(800, 500); ctx.lineTo(0, 500); ctx.fill();
+  // Soft green tree line behind the central campus building.
+  ctx.fillStyle = '#8dbd88';
+  ctx.beginPath(); ctx.moveTo(0, 249); ctx.quadraticCurveTo(110, 192, 218, 244); ctx.quadraticCurveTo(335, 197, 442, 244); ctx.quadraticCurveTo(592, 187, 800, 245); ctx.lineTo(800, 354); ctx.lineTo(0, 354); ctx.fill();
 
-  // Main campus building, with rounded windows and a welcoming entrance.
-  roundedRect(229, 111, 342, 140, 12, '#f2dfbd');
-  roundedRect(213, 101, 374, 24, 9, '#b9825b');
-  roundedRect(335, 177, 130, 74, 8, '#547d69');
-  roundedRect(348, 188, 104, 63, 6, '#365b4c');
-  roundedRect(250, 139, 32, 31, 6, '#9dcac7');
-  roundedRect(295, 139, 32, 31, 6, '#9dcac7');
-  roundedRect(473, 139, 32, 31, 6, '#9dcac7');
-  roundedRect(518, 139, 32, 31, 6, '#9dcac7');
-  ctx.strokeStyle = '#f6ebd4'; ctx.lineWidth = 3;
-  for (const x of [266, 311, 489, 534]) {
-    ctx.beginPath(); ctx.moveTo(x, 140); ctx.lineTo(x, 169); ctx.moveTo(x - 15, 155); ctx.lineTo(x + 15, 155); ctx.stroke();
+  // Broad, symmetrical campus facade and its simple triangular roof.
+  ctx.fillStyle = '#d6a77b';
+  ctx.beginPath(); ctx.moveTo(259, 195); ctx.lineTo(400, 92); ctx.lineTo(541, 195); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#f4d7ad';
+  ctx.beginPath(); ctx.moveTo(279, 190); ctx.lineTo(400, 106); ctx.lineTo(521, 190); ctx.closePath(); ctx.fill();
+  roundedRect(205, 191, 390, 119, 5, '#f0d8b4');
+  roundedRect(190, 185, 420, 17, 4, '#cf9c70');
+  roundedRect(333, 207, 134, 103, 3, '#d5ad84');
+  ctx.fillStyle = '#75958a';
+  for (const x of [225, 270, 315, 485, 530, 575]) {
+    roundedRect(x, 216, 29, 45, 3, '#9dc7ca');
+    ctx.fillStyle = '#e9d9bb';
+    ctx.fillRect(x + 13, 216, 3, 45);
+    ctx.fillRect(x, 237, 29, 3);
+    ctx.fillStyle = '#75958a';
   }
-  ctx.fillStyle = '#fff5df'; ctx.font = 'bold 11px Trebuchet MS, Arial, sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText('UUM  •  CAMPUS LIFE', 400, 119);
-  roundedRect(372, 193, 56, 8, 4, '#f0d39f');
+  for (const x of [350, 375, 400, 425, 450]) {
+    ctx.fillStyle = '#f4e3c6';
+    ctx.fillRect(x, 210, 7, 93);
+    ctx.fillStyle = '#a8c6bd';
+    ctx.fillRect(x + 2, 220, 3, 31);
+  }
+  roundedRect(377, 261, 46, 49, 3, '#668779');
+  ctx.fillStyle = '#f6e5c7';
+  ctx.fillRect(397, 262, 3, 48);
 
-  // Curving walkway
-  ctx.fillStyle = '#e4cfaa';
-  ctx.beginPath(); ctx.moveTo(350, 251); ctx.quadraticCurveTo(345, 327, 256, 500); ctx.lineTo(544, 500); ctx.quadraticCurveTo(455, 327, 450, 251); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = '#d4bd96'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(373, 270); ctx.quadraticCurveTo(369, 355, 319, 490); ctx.moveTo(427, 270); ctx.quadraticCurveTo(431, 355, 481, 490); ctx.stroke();
-
-  // Rounded campus trees
-  for (const x of [42, 115, 684, 756]) {
-    roundedRect(x - 5, 239, 10, 43, 5, '#8b684c');
-    ctx.fillStyle = '#54896a';
-    ctx.beginPath(); ctx.arc(x, 224, 27, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#70a77b';
-    ctx.beginPath(); ctx.arc(x - 10, 216, 15, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#91bd83';
-    ctx.beginPath(); ctx.arc(x + 9, 210, 11, 0, Math.PI * 2); ctx.fill();
+  // Palms frame the building, echoing the campus artwork.
+  for (const side of [-1, 1]) {
+    const baseX = 168 + (side > 0 ? 464 : 0);
+    ctx.strokeStyle = '#9b7654'; ctx.lineWidth = 9; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(baseX, 340); ctx.quadraticCurveTo(baseX + side * 22, 258, baseX + side * 5, 170); ctx.stroke();
+    ctx.strokeStyle = '#6b9b62'; ctx.lineWidth = 7;
+    for (let frond = -2; frond <= 2; frond++) {
+      ctx.beginPath(); ctx.moveTo(baseX + side * 5, 172); ctx.quadraticCurveTo(baseX + side * (frond * 24), 133, baseX + side * (frond * 45 + 4), 174 + Math.abs(frond) * 7); ctx.stroke();
+    }
+    ctx.fillStyle = '#87b46c';
+    for (let leaf = -2; leaf <= 2; leaf++) {
+      ctx.beginPath(); ctx.ellipse(baseX + side * leaf * 16, 164 + Math.abs(leaf) * 3, 19, 5, side * leaf * 0.23, 0, Math.PI * 2); ctx.fill();
+    }
   }
 
-  // Small flower dots add a little campus garden detail.
-  for (const [x, y, color] of [[176, 350, '#e68e91'], [622, 372, '#f1c56f'], [137, 420, '#fff3dc'], [662, 450, '#e68e91'], [75, 386, '#f1c56f']]) {
-    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#547d69'; ctx.fillRect(x - 1, y + 4, 2, 8);
+  // Warm tiled courtyard leading toward the entrance.
+  const paving = ctx.createLinearGradient(0, 302, 0, 500);
+  paving.addColorStop(0, '#e9c99c');
+  paving.addColorStop(1, '#d99f73');
+  ctx.fillStyle = paving;
+  ctx.fillRect(0, 302, 800, 198);
+  ctx.strokeStyle = 'rgba(142, 103, 74, 0.26)'; ctx.lineWidth = 1;
+  for (let y = 326; y < 500; y += 27) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(800, y); ctx.stroke();
   }
+  for (let x = -150; x <= 950; x += 92) {
+    ctx.beginPath(); ctx.moveTo(400 + (x - 400) * 0.16, 302); ctx.lineTo(x, 500); ctx.stroke();
+  }
+
+  // Low flower beds add soft colour around the courtyard edges.
+  for (const [x, y, color] of [[45, 316, '#e89091'], [90, 309, '#fff1d5'], [132, 321, '#f1bf67'], [672, 316, '#e89091'], [716, 307, '#fff1d5'], [758, 322, '#f1bf67']]) {
+    ctx.fillStyle = '#69946a';
+    ctx.beginPath(); ctx.ellipse(x, y + 7, 24, 9, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = color;
+    for (const petal of [-1, 0, 1]) {
+      ctx.beginPath(); ctx.arc(x + petal * 7, y + Math.abs(petal) * 2, 4, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  // A light warm wash softens the illustration so it blends into the loaded artwork.
+  ctx.fillStyle = 'rgba(255, 239, 211, 0.12)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function drawPlayer() {
@@ -1271,6 +1299,7 @@ function pauseGame() {
   keys.clear();
   touchDirections.clear();
   activeTouchPointers.clear();
+  touchControlButtons.forEach((button) => button.classList.remove('is-pressed'));
   touchControls.hidden = true;
   clearInterval(gameTimer);
   gameTimer = null;
@@ -1419,6 +1448,7 @@ function returnToMainMenu() {
   keys.clear();
   touchDirections.clear();
   activeTouchPointers.clear();
+  touchControlButtons.forEach((button) => button.classList.remove('is-pressed'));
   touchControls.hidden = true;
   pauseButton.hidden = true;
   pauseOverlay.hidden = true;
@@ -1471,6 +1501,7 @@ function startGame(restartMusic = false) {
   keys.clear();
   touchDirections.clear();
   activeTouchPointers.clear();
+  touchControlButtons.forEach((button) => button.classList.remove('is-pressed'));
 
   score = 0;
   roundElapsed = 0;
@@ -1551,7 +1582,10 @@ function releaseTouchDirection(pointerId) {
   const direction = activeTouchPointers.get(pointerId);
   if (!direction) return;
   activeTouchPointers.delete(pointerId);
-  if (![...activeTouchPointers.values()].includes(direction)) touchDirections.delete(direction);
+  if (![...activeTouchPointers.values()].includes(direction)) {
+    touchDirections.delete(direction);
+    touchControlButtons.find((button) => button.dataset.direction === direction)?.classList.remove('is-pressed');
+  }
 }
 
 for (const button of touchControlButtons) {
@@ -1561,6 +1595,12 @@ for (const button of touchControlButtons) {
     const direction = button.dataset.direction;
     activeTouchPointers.set(event.pointerId, direction);
     touchDirections.add(direction);
+    if (event.pointerType === 'touch') {
+      button.classList.add('is-pressed');
+      if (typeof navigator.vibrate === 'function') {
+        try { navigator.vibrate(15); } catch {}
+      }
+    }
     try { button.setPointerCapture(event.pointerId); } catch {}
   });
   for (const eventName of ['pointerup', 'pointercancel', 'lostpointercapture']) {
