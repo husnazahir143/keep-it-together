@@ -202,7 +202,7 @@ canvas { width: 100%; max-width: 100%; height: auto; aspect-ratio: 8 / 5; displa
   user-select: none;
   transition: transform 70ms ease-out, background-color 70ms ease-out, box-shadow 70ms ease-out;
 }
-.touch-control:active { transform: scale(.94); }
+.touch-control:active,
 .touch-control.is-pressed {
   transform: scale(.94);
   background: #4f9b68;
