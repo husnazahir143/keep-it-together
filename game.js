@@ -1614,9 +1614,11 @@ for (const button of touchControlButtons) {
     const direction = button.dataset.direction;
     activeTouchPointers.set(event.pointerId, direction);
     touchDirections.add(direction);
-    button.classList.add('is-pressed');
-    if (event.pointerType === 'touch' && typeof navigator.vibrate === 'function') {
-      try { navigator.vibrate(25); } catch {}
+    if (event.pointerType === 'touch') {
+      button.classList.add('is-pressed');
+      if (typeof navigator.vibrate === 'function') {
+        try { navigator.vibrate(25); } catch {}
+      }
     }
     try { button.setPointerCapture(event.pointerId); } catch {}
   });
