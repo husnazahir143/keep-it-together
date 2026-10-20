@@ -1605,10 +1605,6 @@ function clearReleasedTouchButton(button, event) {
 }
 
 for (const button of touchControlButtons) {
-  button.addEventListener('touchstart', () => {
-    if (!running || paused || typeof navigator.vibrate !== 'function') return;
-    try { navigator.vibrate(25); } catch {}
-  }, { passive: true });
   for (const eventName of ['touchend', 'touchcancel']) {
     button.addEventListener(eventName, (event) => clearReleasedTouchButton(button, event), { passive: true });
   }
@@ -1619,6 +1615,9 @@ for (const button of touchControlButtons) {
     activeTouchPointers.set(event.pointerId, direction);
     touchDirections.add(direction);
     button.classList.add('is-pressed');
+    if (event.pointerType === 'touch' && typeof navigator.vibrate === 'function') {
+      try { navigator.vibrate(25); } catch {}
+    }
     try { button.setPointerCapture(event.pointerId); } catch {}
   });
   for (const eventName of ['pointerup', 'pointercancel', 'lostpointercapture']) {
