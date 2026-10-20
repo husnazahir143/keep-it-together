@@ -1589,18 +1589,17 @@ function releaseTouchDirection(pointerId) {
 }
 
 for (const button of touchControlButtons) {
+  button.addEventListener('touchstart', () => {
+    if (!running || paused || typeof navigator.vibrate !== 'function') return;
+    try { navigator.vibrate(25); } catch {}
+  }, { passive: true });
   button.addEventListener('pointerdown', (event) => {
     if (!running || paused) return;
     event.preventDefault();
     const direction = button.dataset.direction;
     activeTouchPointers.set(event.pointerId, direction);
     touchDirections.add(direction);
-    if (event.pointerType === 'touch') {
-      button.classList.add('is-pressed');
-      if (typeof navigator.vibrate === 'function') {
-        try { navigator.vibrate(15); } catch {}
-      }
-    }
+    button.classList.add('is-pressed');
     try { button.setPointerCapture(event.pointerId); } catch {}
   });
   for (const eventName of ['pointerup', 'pointercancel', 'lostpointercapture']) {
