@@ -1588,11 +1588,30 @@ function releaseTouchDirection(pointerId) {
   }
 }
 
+function clearReleasedTouchButton(button, event) {
+  const bounds = button.getBoundingClientRect();
+  const stillTouchingButton = [...event.touches].some((touch) =>
+    touch.clientX >= bounds.left && touch.clientX <= bounds.right &&
+    touch.clientY >= bounds.top && touch.clientY <= bounds.bottom
+  );
+  if (stillTouchingButton) return;
+
+  const direction = button.dataset.direction;
+  touchDirections.delete(direction);
+  for (const [pointerId, activeDirection] of activeTouchPointers) {
+    if (activeDirection === direction) activeTouchPointers.delete(pointerId);
+  }
+  button.classList.remove('is-pressed');
+}
+
 for (const button of touchControlButtons) {
   button.addEventListener('touchstart', () => {
     if (!running || paused || typeof navigator.vibrate !== 'function') return;
     try { navigator.vibrate(25); } catch {}
   }, { passive: true });
+  for (const eventName of ['touchend', 'touchcancel']) {
+    button.addEventListener(eventName, (event) => clearReleasedTouchButton(button, event), { passive: true });
+  }
   button.addEventListener('pointerdown', (event) => {
     if (!running || paused) return;
     event.preventDefault();
@@ -1616,8 +1635,9 @@ draw();
 updateAudioToggleStates();
 
 document.addEventListener('click', (event) => {
-  if (!event.target.closest('button')) return;
-  if (soundEffectsEnabled) playSound(soundEffects.buttonClick);
+  const button = event.target.closest('button');
+  if (!button) return;
+  if (!button.matches('.touch-control') && soundEffectsEnabled) playSound(soundEffects.buttonClick);
   if (currentAudioScreen === 'menu') restoreBackgroundMusic();
 });
 
